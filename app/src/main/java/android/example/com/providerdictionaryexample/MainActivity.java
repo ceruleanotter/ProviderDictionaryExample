@@ -14,7 +14,6 @@ import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends ActionBarActivity {
     Uri mDictionaryWordsUri;
-    //TextView mDictTextView;
     ListView mDictListView;
 
 
@@ -22,12 +21,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //mDictTextView = (TextView) findViewById(R.id.dictionary_contents);
         mDictListView = (ListView) findViewById(R.id.dictionary_contents);
 
-        Uri dic = UserDictionary.Words.CONTENT_URI;
+        mDictionaryWordsUri = UserDictionary.Words.CONTENT_URI;
         ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(dic,null, null, null, null);
+        Cursor cursor = resolver.query(mDictionaryWordsUri,null, null, null, null);
 
 
         String[] columnsToBeBound = new String[] {
@@ -50,23 +48,6 @@ public class MainActivity extends ActionBarActivity {
 
 
         mDictListView.setAdapter(adapter);
-
-
-
-
-        //mDictTextView.setText("");
-
-        /*while (cursor.moveToNext()) {
-            int wordColumn = cursor.getColumnIndex(UserDictionary.Words.WORD);
-            int frequencyColumn = cursor.getColumnIndex(UserDictionary.Words.FREQUENCY);
-            int idColumn = cursor.getColumnIndex(UserDictionary.Words._ID);
-            String word = cursor.getString(wordColumn);
-            int frequency = cursor.getInt(frequencyColumn);
-            int id = cursor.getInt(idColumn);
-            mDictTextView.append(("\n" + id + " " + word + " : " + frequency));
-
-        }*/
-
 
     }
 
