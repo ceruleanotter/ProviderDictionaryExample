@@ -8,28 +8,55 @@ import android.provider.UserDictionary;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 
 public class MainActivity extends ActionBarActivity {
     Uri mDictionaryWordsUri;
-    TextView mDictTextView;
-
+    //TextView mDictTextView;
+    ListView mDictListView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDictTextView = (TextView) findViewById(R.id.dictionary_contents);
+        //mDictTextView = (TextView) findViewById(R.id.dictionary_contents);
+        mDictListView = (ListView) findViewById(R.id.dictionary_contents);
 
         Uri dic = UserDictionary.Words.CONTENT_URI;
         ContentResolver resolver = getContentResolver();
         Cursor cursor = resolver.query(dic,null, null, null, null);
-        mDictTextView.setText("");
 
-        while (cursor.moveToNext()) {
+
+        String[] columnsToBeBound = new String[] {
+                UserDictionary.Words.WORD,
+                UserDictionary.Words.FREQUENCY
+        };
+
+        int[] layoutItemsToFill = new int[] {
+                android.R.id.text1,
+                android.R.id.text2
+        };
+
+
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                android.R.layout.two_line_list_item,
+                cursor,
+                columnsToBeBound,
+                layoutItemsToFill,
+                0);
+
+
+        mDictListView.setAdapter(adapter);
+
+
+
+
+        //mDictTextView.setText("");
+
+        /*while (cursor.moveToNext()) {
             int wordColumn = cursor.getColumnIndex(UserDictionary.Words.WORD);
             int frequencyColumn = cursor.getColumnIndex(UserDictionary.Words.FREQUENCY);
             int idColumn = cursor.getColumnIndex(UserDictionary.Words._ID);
@@ -38,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
             int id = cursor.getInt(idColumn);
             mDictTextView.append(("\n" + id + " " + word + " : " + frequency));
 
-        }
+        }*/
 
 
     }
