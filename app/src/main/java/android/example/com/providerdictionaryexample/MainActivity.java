@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package android.example.com.providerdictionaryexample;
 
 import android.content.ContentResolver;
@@ -6,16 +21,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.UserDictionary;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-
+/**
+ * This is the central activity for the Provider Dictionary Example App. The purpose of this app is
+ * to show an example of accessing the {@link UserDictionary.Words} list via its' Content Provider.
+ */
 public class MainActivity extends ActionBarActivity {
-    Uri mDictionaryWordsUri;
-    ListView mDictListView;
+    private Uri mDictionaryWordsUri;
+    private ListView mDictListView;
 
+    //For the SimpleCursorAdapter to match the in the UserDictionary columns to layout items
+    private static final String[] COLUMNS_TO_BE_BOUND  = new String[] {
+            UserDictionary.Words.WORD,
+            UserDictionary.Words.FREQUENCY
+    };
+
+    private static final int[] LAYOUT_ITEMS_TO_FILL = new int[] {
+            android.R.id.text1,
+            android.R.id.text2
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,49 +53,13 @@ public class MainActivity extends ActionBarActivity {
         ContentResolver resolver = getContentResolver();
         Cursor cursor = resolver.query(mDictionaryWordsUri,null, null, null, null);
 
-
-        String[] columnsToBeBound = new String[] {
-                UserDictionary.Words.WORD,
-                UserDictionary.Words.FREQUENCY
-        };
-
-        int[] layoutItemsToFill = new int[] {
-                android.R.id.text1,
-                android.R.id.text2
-        };
-
-
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 android.R.layout.two_line_list_item,
                 cursor,
-                columnsToBeBound,
-                layoutItemsToFill,
+                COLUMNS_TO_BE_BOUND,
+                LAYOUT_ITEMS_TO_FILL,
                 0);
 
-
         mDictListView.setAdapter(adapter);
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
